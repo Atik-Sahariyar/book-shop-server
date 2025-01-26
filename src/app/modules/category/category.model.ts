@@ -7,7 +7,7 @@ const categorySchema = new Schema<ICategory>(
     name: { type: String, required: true, unique: true },
     description: { type: String },
     image: { type: String },
-    slug: { type: String, required: true, unique: true },
+    slug: { type: String, unique: true, required: true },
     isFeatured: { type: Boolean, default: false },
     status: { type: String, enum: ["active", "inactive"], default: "active" },
     totalProduct: { type: Number, default: 0 },

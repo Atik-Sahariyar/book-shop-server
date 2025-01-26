@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Model } from "mongoose";
 
 const customGenerateId = async (
@@ -5,7 +6,7 @@ const customGenerateId = async (
   collectionName: Model<any>
 ) => {
   let currentId = (0).toString();
-  const lastCategoryId = await collectionName
+  const lastId = await collectionName
     .findOne(
       {},
       {
@@ -18,8 +19,8 @@ const customGenerateId = async (
     })
     .lean();
 
-  if (lastCategoryId) {
-    currentId = lastCategoryId.id.substring(9);
+  if (lastId) {
+    currentId = lastId?.id.split("-")[1];
   }
 
   let incrementId = (Number(currentId) + 1).toString().padStart(4, "0");

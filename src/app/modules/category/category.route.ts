@@ -6,16 +6,22 @@ import {
   getAllCategories,
   getAllFeaturedCategories,
   getCategoryById,
-  getFiltreOptionsByCategoriesBrandsAndOthers,
   updateCategoryById,
 } from "./category.controllers";
 import validateRequest from "../../middlewares/validateRequest";
 import { createCategoryValidationSchema } from "./category.validation";
+import auth from "../../middlewares/auth";
+import { USER_ROLE } from "../user/user.constant";
 
 const router = express.Router();
 
 // create a category
-router.post("/create-category", validateRequest(createCategoryValidationSchema), createCategory);
+router.post(
+  "/create-category",
+  auth(USER_ROLE.admin),
+  validateRequest(createCategoryValidationSchema),
+  createCategory
+);
 
 // get all categories
 router.get("/all-category", getAllCategories);
@@ -30,13 +36,9 @@ router.get("/featured-categories", getAllFeaturedCategories);
 router.get("/category/:id", getCategoryById);
 
 // update category by id
-router.patch("/update/:id", updateCategoryById);
+router.patch("/update/:id", auth(USER_ROLE.admin), updateCategoryById);
 
 // delete category by id
-router.delete("/delete/:id", deleteCategoryById);
-
-// get filters options
-router.get("/filters-options", getFiltreOptionsByCategoriesBrandsAndOthers);
-
+router.delete("/delete/:id", auth(USER_ROLE.admin), deleteCategoryById);
 
 export const categoryRoutes = router;
