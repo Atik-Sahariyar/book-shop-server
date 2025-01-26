@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
-import httpStatus from 'http-status';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import AppError from '../errors/AppError';
-import catchAsync from '../utils/catchAsync';
-import { TUserRole } from '../mdules/user/user.interface';
-import config from '../config';
-import { User } from '../mdules/user/user.model';
+import { NextFunction, Request, Response } from "express";
+import httpStatus from "http-status";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import AppError from "../errors/AppError";
+import catchAsync from "../utils/catchAsync";
+import config from "../config";
+import { User } from "../modules/user/user.model";
+import { TUserRole } from "../modules/user/user.interface";
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -13,13 +13,13 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
     // checking if the token is missing
     if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+      throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
     }
 
     // checking if the given token is valid
     const decoded = jwt.verify(
       token,
-      config.jwt_access_secret as string,
+      config.jwt_access_secret as string
     ) as JwtPayload;
 
     const { role, email, iat } = decoded;
@@ -28,30 +28,30 @@ const auth = (...requiredRoles: TUserRole[]) => {
     const user = await User.isUserExistsByEmail(email);
 
     if (!user) {
-      throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
+      throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
     }
- 
+
     // checking if the user is blocked
     const userStatus = user?.status;
 
-    if (userStatus === 'blocked') {
-      throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
+    if (userStatus === "blocked") {
+      throw new AppError(httpStatus.FORBIDDEN, "This user is blocked ! !");
     }
 
     if (
       user.passwordChangedAt &&
       User.isJWTIssuedBeforePasswordChanged(
         user.passwordChangedAt,
-        iat as number,
+        iat as number
       )
     ) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
+      throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized !");
     }
 
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
-        'You are not authorized  hi!',
+        "You are not authorized  hi!"
       );
     }
 

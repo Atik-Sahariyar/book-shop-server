@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { model, Schema } from "mongoose";
 import { IUser, UserModel } from "./user.interface";
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser, UserModel>(
   {
     id: { type: String, required: true },
     name: { type: String, required: true },
@@ -16,7 +16,7 @@ const userSchema = new Schema<IUser>(
     role: {
       type: String,
       default: "user",
-      enum: ["superAdmin", "admin", "user"],
+      enum: ["admin", "user"],
     },
     status: {
       type: String,

@@ -19,4 +19,5 @@ export default {
   smtp_secure: process.env.SMTP_SECURE,
   smtp_user: process.env.SMTP_USER,
   smtp_pass: process.env.SMTP_PASS,
+  reset_pass_ui_link: process.env.RESET_PASS_UI_LINK,
 };

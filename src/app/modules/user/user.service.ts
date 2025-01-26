@@ -13,7 +13,6 @@ const createUserIntoDB = async (userData: IUser) => {
     throw new AppError(httpStatus.BAD_REQUEST, "This user already exist");
   }
 
-
   const incrementId = await customGenerateId("user", User);
   userData.id = incrementId;
 
@@ -26,13 +25,13 @@ const createUserIntoDB = async (userData: IUser) => {
 
 // get all user from db
 const getAllUserFromDB = async (query: Record<string, unknown>) => {
-  const offeredCourseQuery = new QueryBuilder(User.find(), query)
+  const allUserQuery = new QueryBuilder(User.find(), query)
     .filter()
     .sort()
     .paginate()
     .fields();
 
-  const result = await offeredCourseQuery.modelQuery;
+  const result = await allUserQuery.modelQuery;
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, "Users not found");
   }
@@ -71,7 +70,7 @@ const updateSingleUserByIdFromDB = async (id: string, updateUser: IUser) => {
 
 // delete single user by id
 const deleteSingleUserByIdFromDB = async (id: string) => {
-  const result =  await User.findByIdAndDelete(id);
+  const result = await User.findByIdAndDelete(id);
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
